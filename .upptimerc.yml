@@ -126,9 +126,6 @@ i18n:
   resolved: Resolvido
   footer: Mantido por Vitor Gomes
 
-# Sobe incidente so depois de 2 falhas seguidas, evita alarme por oscilacao
-delay: 30
-commitMessages:
-  readmeContent: "docs: atualiza README"
-  summaryInReadme: "docs: atualiza resumo no README"
-  statusChange: "$PRETTY_NAME está $STATUS ($RESPONSE_CODE em $RESPONSE_TIME ms)"
+# NAO personalize commitMessages.statusChange: o Upptime extrai status e
+# tempo de resposta da mensagem de commit do history/<slug>.yml.
+# Mudar o formato faz tudo aparecer como fora do ar com 0 ms.
