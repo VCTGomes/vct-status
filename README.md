@@ -2,11 +2,11 @@
 
 This repository contains the open-source uptime monitor and status page for [SEU_USUARIO_GITHUB](https://status.vctgomes.com), powered by [Upptime](https://github.com/upptime/upptime).
 
-[![Uptime CI](https://github.com/SEU_USUARIO_GITHUB/vct-status/workflows/Uptime%20CI/badge.svg)](https://github.com/SEU_USUARIO_GITHUB/vct-status/actions/workflows/uptime.yml)
-[![Response Time CI](https://github.com/SEU_USUARIO_GITHUB/vct-status/workflows/Response%20Time%20CI/badge.svg)](https://github.com/SEU_USUARIO_GITHUB/vct-status/actions/workflows/response-time.yml)
-[![Graphs CI](https://github.com/SEU_USUARIO_GITHUB/vct-status/workflows/Graphs%20CI/badge.svg)](https://github.com/SEU_USUARIO_GITHUB/vct-status/actions/workflows/graphs.yml)
-[![Static Site CI](https://github.com/SEU_USUARIO_GITHUB/vct-status/workflows/Static%20Site%20CI/badge.svg)](https://github.com/SEU_USUARIO_GITHUB/vct-status/actions/workflows/site.yml)
-[![Summary CI](https://github.com/SEU_USUARIO_GITHUB/vct-status/workflows/Summary%20CI/badge.svg)](https://github.com/SEU_USUARIO_GITHUB/vct-status/actions/workflows/summary.yml)
+[![Uptime CI](https://github.com/VCTGomes/vct-status/workflows/Uptime%20CI/badge.svg)](https://github.com/VCTGomes/vct-status/actions/workflows/uptime.yml)
+[![Response Time CI](https://github.com/VCTGomes/vct-status/workflows/Response%20Time%20CI/badge.svg)](https://github.com/VCTGomes/vct-status/actions/workflows/response-time.yml)
+[![Graphs CI](https://github.com/VCTGomes/vct-status/workflows/Graphs%20CI/badge.svg)](https://github.com/VCTGomes/vct-status/actions/workflows/graphs.yml)
+[![Static Site CI](https://github.com/VCTGomes/vct-status/workflows/Static%20Site%20CI/badge.svg)](https://github.com/VCTGomes/vct-status/actions/workflows/site.yml)
+[![Summary CI](https://github.com/VCTGomes/vct-status/workflows/Summary%20CI/badge.svg)](https://github.com/VCTGomes/vct-status/actions/workflows/summary.yml)
 
 With [Upptime](https://upptime.js.org), you can get your own unlimited and free uptime monitor and status page, powered entirely by a GitHub repository. We use [Issues](https://github.com/SEU_USUARIO_GITHUB/vct-status/issues) as incident reports, [Actions](https://github.com/SEU_USUARIO_GITHUB/vct-status/actions) as uptime monitors, and [Pages](https://status.vctgomes.com) for the status page.
 
