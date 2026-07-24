@@ -1,6 +1,6 @@
 # [📈 Status ao vivo](https://status.vctgomes.com): <!--live status--> **Todos os serviços operacionais**
 
-This repository contains the open-source uptime monitor and status page for [SEU_USUARIO_GITHUB](https://status.vctgomes.com), powered by [Upptime](https://github.com/upptime/upptime).
+This repository contains the open-source uptime monitor and status page for [VCTGomes](https://status.vctgomes.com), powered by [Upptime](https://github.com/upptime/upptime).
 
 [![Uptime CI](https://github.com/VCTGomes/vct-status/workflows/Uptime%20CI/badge.svg)](https://github.com/VCTGomes/vct-status/actions/workflows/uptime.yml)
 [![Response Time CI](https://github.com/VCTGomes/vct-status/workflows/Response%20Time%20CI/badge.svg)](https://github.com/VCTGomes/vct-status/actions/workflows/response-time.yml)
