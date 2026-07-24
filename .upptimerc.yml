@@ -1,31 +1,134 @@
-# Change these first
-owner: upptime # Your GitHub organization or username, where this repository lives
-repo: upptime # The name of this repository
+# Upptime: https://upptime.js.org/docs/configuration
+owner: SEU_USUARIO_GITHUB
+repo: vct-status
 
 sites:
-  - name: Google
-    url: https://www.google.com
-  - name: Wikipedia
-    url: https://en.wikipedia.org
-  - name: Hacker News
-    url: https://news.ycombinator.com
-  - name: Secret Site
-    url: $SECRET_SITE
+  - name: RMF
+    url: https://redesmoveisfixas.com/health
+    icon: https://redesmoveisfixas.com/res/icon.svg
+    expectedStatusCodes:
+      - 200
+    # atencao: este endpoint devolve JSON formatado, o espaco importa
+    __dangerous__body_down_if_text_missing: '"status": "ok"'
+    maxResponseTime: 2000
+
+  - name: RMF API
+    url: https://api.redesmoveisfixas.com/health
+    icon: https://redesmoveisfixas.com/res/icon.svg
+    expectedStatusCodes:
+      - 200
+    # so conta como no ar se o corpo trouxer "status":"ok"
+    __dangerous__body_down_if_text_missing: '"status":"ok"'
+    # qualquer dependencia com ok:false derruba o monitor
+    __dangerous__body_down: '"ok":false'
+    # acima de 2s marca como degradado, nao como fora do ar
+    maxResponseTime: 2000
+
+  - name: RMF AI
+    url: https://ai.redesmoveisfixas.com/health
+    icon: https://redesmoveisfixas.com/res/icon.svg
+    expectedStatusCodes:
+      - 200
+    # endpoint formatado, o espaco importa
+    __dangerous__body_down_if_text_missing: '"status": "ok"'
+    # qualquer banco com ok:false derruba o monitor
+    __dangerous__body_down: '"ok": false'
+    maxResponseTime: 3000
+
+  - name: Bot Telegram (RMF)
+    url: https://ai.redesmoveisfixas.com/health
+    icon: https://redesmoveisfixas.com/res/icon.svg
+    expectedStatusCodes:
+      - 200
+    # cai se o webhook do Telegram deixar de estar registrado
+    __dangerous__body_down_if_text_missing: '"telegram_webhook": true'
+    maxResponseTime: 3000
+
+  - name: Malha Brasil
+    url: https://malhabrasil.com/health
+    icon: https://malhabrasil.com/res/icon.svg
+    expectedStatusCodes:
+      - 200
+    # este endpoint devolve JSON compactado, sem espaco
+    __dangerous__body_down_if_text_missing: '"status":"ok"'
+    maxResponseTime: 2000
+
+  - name: Malha Brasil AI
+    url: https://ai.malhabrasil.com/health
+    icon: https://malhabrasil.com/res/icon.svg
+    expectedStatusCodes:
+      - 200
+    # endpoint formatado, o espaco importa
+    __dangerous__body_down_if_text_missing: '"status": "ok"'
+    # cobre siga, ons, gd, rede e conversas-ia
+    __dangerous__body_down: '"ok": false'
+    maxResponseTime: 3000
+
+  - name: Tiles (RMF e Malha Brasil)
+    url: https://tiles-health.redesmoveisfixas.com/health
+    icon: https://redesmoveisfixas.com/res/icon.svg
+    expectedStatusCodes:
+      - 200
+    # fora do ar: servico caiu
+    __dangerous__body_down_if_text_missing: '"status": "ok"'
+    # fora do ar: qualquer worker ou tile com problema
+    __dangerous__body_down: '"ok": false'
+    maxResponseTime: 5000
+
+  - name: CDN (tiles)
+    url: https://cdn.redesmoveisfixas.com/health
+    icon: https://redesmoveisfixas.com/res/icon.svg
+    expectedStatusCodes:
+      - 200
+    # endpoint compactado, sem espaco
+    __dangerous__body_down_if_text_missing: '"status":"ok"'
+    # fora do ar se o R2 nao responder
+    __dangerous__body_down: '"r2":false'
+    # degradado quando nao esta sendo servido pelo worker da Cloudflare (backup)
+    __dangerous__body_degraded_if_text_missing: '"served_by":"cf-rmfworker"'
+    maxResponseTime: 3000
 
 status-website:
-  # Add your custom domain name, or remove the `cname` line if you don't have a domain
-  # Uncomment the `baseUrl` line if you don't have a custom domain and add your repo name there
-  cname: demo.upptime.js.org
-  # baseUrl: /your-repo-name
-  logoUrl: https://raw.githubusercontent.com/upptime/upptime.js.org/master/static/img/icon.svg
-  name: Upptime
-  introTitle: "**Upptime** is the open-source uptime monitor and status page, powered entirely by GitHub."
-  introMessage: This is a sample status page which uses **real-time** data from our [GitHub repository](https://github.com/upptime/upptime). No server required — just GitHub Actions, Issues, and Pages. [**Get your own for free**](https://github.com/upptime/upptime)
+  cname: status.vctgomes.com
+  logoUrl: https://vctgomes.com/favicon.ico
+  name: Status
+  introTitle: Status dos serviços
+  introMessage: Monitoramento automático dos serviços. Verificação a cada 5 minutos.
   navbar:
     - title: Status
       href: /
-    - title: GitHub
-      href: https://github.com/$OWNER/$REPO
+    - title: RMF
+      href: https://redesmoveisfixas.com
+    - title: Malha Brasil
+      href: https://malhabrasil.com
+    - title: vctgomes.com
+      href: https://vctgomes.com
+  theme: dark
 
-# Upptime also supports notifications, assigning issues, and more
-# See https://upptime.js.org/docs/configuration
+i18n:
+  activeIncidents: Incidentes ativos
+  allSystemsOperational: Todos os serviços operacionais
+  incidentReport: "Relatório #$NUMBER:"
+  incidentTitle: Incidentes
+  liveStatus: Status ao vivo
+  overallUptime: "Disponibilidade geral: $UPTIME"
+  down: fora do ar
+  up: no ar
+  degraded: degradado
+  ms: ms
+  responseTime: Tempo de resposta
+  uptime: Disponibilidade
+  day: 1 dia
+  week: 7 dias
+  month: 30 dias
+  year: 1 ano
+  pastIncidents: Incidentes anteriores
+  resolved: Resolvido
+  footer: Mantido por Vitor Gomes
+
+# Sobe incidente so depois de 2 falhas seguidas, evita alarme por oscilacao
+delay: 30
+commitMessages:
+  readmeContent: "docs: atualiza README"
+  summaryInReadme: "docs: atualiza resumo no README"
+  statusChange: "$PRETTY_NAME está $STATUS ($RESPONSE_CODE em $RESPONSE_TIME ms)"
