@@ -3,7 +3,10 @@ owner: VCTGomes
 repo: vct-status
 
 sites:
+  # o slug fixa a identidade do historico (history/, api/, graphs/, labels das
+  # issues). ele NAO pode mudar; o name acima e so rotulo de exibicao.
   - name: RMF
+    slug: rmf
     url: https://redesmoveisfixas.com/health
     icon: https://redesmoveisfixas.com/res/icon.svg
     expectedStatusCodes:
@@ -13,6 +16,7 @@ sites:
     maxResponseTime: 2000
 
   - name: RMF API
+    slug: rmf-api
     url: https://api.redesmoveisfixas.com/health
     icon: https://redesmoveisfixas.com/res/icon.svg
     expectedStatusCodes:
@@ -25,6 +29,7 @@ sites:
     maxResponseTime: 2000
 
   - name: RMF AI
+    slug: rmf-ai
     url: https://ai.redesmoveisfixas.com/health
     icon: https://redesmoveisfixas.com/res/icon.svg
     expectedStatusCodes:
@@ -36,6 +41,7 @@ sites:
     maxResponseTime: 3000
 
   - name: Bot Telegram (RMF)
+    slug: bot-telegram-rmf
     url: https://ai.redesmoveisfixas.com/health
     icon: https://redesmoveisfixas.com/res/icon.svg
     expectedStatusCodes:
@@ -45,6 +51,7 @@ sites:
     maxResponseTime: 3000
 
   - name: Malha Brasil
+    slug: malha-brasil
     url: https://malhabrasil.com/health
     icon: https://malhabrasil.com/res/icon.svg
     expectedStatusCodes:
@@ -54,6 +61,7 @@ sites:
     maxResponseTime: 2000
 
   - name: Malha Brasil AI
+    slug: malha-brasil-ai
     url: https://ai.malhabrasil.com/health
     icon: https://malhabrasil.com/res/icon.svg
     expectedStatusCodes:
@@ -65,6 +73,7 @@ sites:
     maxResponseTime: 3000
 
   - name: Tiles (RMF e Malha Brasil)
+    slug: tiles-rmf-e-malha-brasil
     url: https://tiles-health.redesmoveisfixas.com/health
     icon: https://redesmoveisfixas.com/res/icon.svg
     expectedStatusCodes:
@@ -76,6 +85,7 @@ sites:
     maxResponseTime: 5000
 
   - name: CDN (tiles)
+    slug: cdn-tiles
     url: https://cdn.redesmoveisfixas.com/health
     icon: https://redesmoveisfixas.com/res/icon.svg
     expectedStatusCodes:
