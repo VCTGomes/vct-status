@@ -72,7 +72,24 @@ sites:
     __dangerous__body_down: '"ok": false'
     maxResponseTime: 3000
 
-  - name: Tiles (RMF e Malha Brasil)
+  # caminho principal dos tiles: worker da Cloudflare servindo do R2.
+  - name: Tiles CDN (principal)
+    slug: cdn-tiles
+    url: https://cdn.redesmoveisfixas.com/health
+    icon: https://redesmoveisfixas.com/res/icon.svg
+    expectedStatusCodes:
+      - 200
+    # endpoint compactado, sem espaco
+    __dangerous__body_down_if_text_missing: '"status":"ok"'
+    # fora do ar se o R2 nao responder
+    __dangerous__body_down: '"r2":false'
+    # degradado quando o worker da Cloudflare nao esta servindo, ou seja,
+    # quando a resposta esta vindo de outro caminho que nao o principal
+    __dangerous__body_degraded_if_text_missing: '"served_by":"cf-rmfworker"'
+    maxResponseTime: 3000
+
+  # fallback local, assume se o caminho principal cair (role: fallback-local).
+  - name: Tiles local (backup)
     slug: tiles-rmf-e-malha-brasil
     url: https://tiles-health.redesmoveisfixas.com/health
     icon: https://redesmoveisfixas.com/res/icon.svg
@@ -83,20 +100,6 @@ sites:
     # fora do ar: qualquer worker ou tile com problema
     __dangerous__body_down: '"ok": false'
     maxResponseTime: 5000
-
-  - name: CDN (tiles)
-    slug: cdn-tiles
-    url: https://cdn.redesmoveisfixas.com/health
-    icon: https://redesmoveisfixas.com/res/icon.svg
-    expectedStatusCodes:
-      - 200
-    # endpoint compactado, sem espaco
-    __dangerous__body_down_if_text_missing: '"status":"ok"'
-    # fora do ar se o R2 nao responder
-    __dangerous__body_down: '"r2":false'
-    # degradado quando nao esta sendo servido pelo worker da Cloudflare (backup)
-    __dangerous__body_degraded_if_text_missing: '"served_by":"cf-rmfworker"'
-    maxResponseTime: 3000
 
 status-website:
   cname: status.vctgomes.com
