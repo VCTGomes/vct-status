@@ -112,19 +112,19 @@
     "url": "https://tiles-health.redesmoveisfixas.com/health",
     "icon": "https://redesmoveisfixas.com/res/icon.svg",
     "slug": "tiles-rmf-e-malha-brasil",
-    "status": "down",
-    "uptime": "97.53%",
-    "uptimeDay": "91.02%",
-    "uptimeWeek": "97.53%",
-    "uptimeMonth": "97.53%",
-    "uptimeYear": "97.53%",
-    "time": 609,
-    "timeDay": 613,
-    "timeWeek": 609,
-    "timeMonth": 609,
-    "timeYear": 609,
+    "status": "up",
+    "uptime": "94.99%",
+    "uptimeDay": "81.28%",
+    "uptimeWeek": "94.99%",
+    "uptimeMonth": "94.99%",
+    "uptimeYear": "94.99%",
+    "time": 588,
+    "timeDay": 574,
+    "timeWeek": 588,
+    "timeMonth": 588,
+    "timeYear": 588,
     "dailyMinutesDown": {
-      "2026-07-28": 129
+      "2026-07-28": 269
     }
   },
   {
