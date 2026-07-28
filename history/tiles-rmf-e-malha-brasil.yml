@@ -1,7 +1,7 @@
 url: https://tiles-health.redesmoveisfixas.com/health
-status: down
-code: 503
-responseTime: 560
-lastUpdated: 2026-07-28T13:10:06.361Z
+status: up
+code: 200
+responseTime: 419
+lastUpdated: 2026-07-28T15:30:19.997Z
 startTime: 2026-07-24T21:45:55.150Z
 generator: Upptime <https://github.com/upptime/upptime>
