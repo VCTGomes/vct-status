@@ -1,0 +1,62 @@
+# Gera daily/uptime.json (status por dia, por monitor) para a fita de barrinhas
+# da pagina de status.
+#
+# Este arquivo NAO e gerenciado pelo template do Upptime: o update-template
+# sobrescreve apenas os workflows que ele mesmo cria (uptime, site, summary,
+# graphs, response-time, updates, setup). Nao renomeie para um desses nomes.
+name: Daily uptime CI
+on:
+  # roda depois de cada checagem, para a fita refletir uma queda no mesmo dia
+  workflow_run:
+    workflows: ["Uptime CI"]
+    types: [completed]
+  # rede de seguranca: garante o recorte do dia novo mesmo sem mudanca de status
+  schedule:
+    - cron: "10 0 * * *"
+  workflow_dispatch:
+
+# mesmo grupo dos workflows do Upptime: eles fazem push no master com
+# frequencia, e concorrer com eles quebraria o push
+concurrency:
+  group: ${{ github.repository }}-${{ github.head_ref || github.ref_name }}-upptime
+  cancel-in-progress: false
+
+jobs:
+  daily:
+    name: Aggregate daily uptime
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.workflow_run.head_branch || github.head_ref || github.ref_name }}
+          token: ${{ secrets.GH_PAT || github.token }}
+          # o agregador le o log completo de history/<slug>.yml
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+      - name: Aggregate
+        run: node scripts/daily-uptime.mjs
+      - name: Commit
+        run: |
+          set -euo pipefail
+          if [ -z "$(git status --porcelain daily)" ]; then
+            echo "nada mudou"
+            exit 0
+          fi
+          git config user.name "Upptime Bot"
+          git config user.email "73812536+upptime-bot@users.noreply.github.com"
+          git add daily
+          git commit -m ":chart_with_upwards_trend: Update daily uptime [skip ci]"
+          # o Upptime pode ter feito push enquanto isso; tenta rebasear
+          for i in 1 2 3; do
+            if git push; then
+              exit 0
+            fi
+            git pull --rebase --autostash
+          done
+          git push

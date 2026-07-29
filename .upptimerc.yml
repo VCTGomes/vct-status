@@ -116,7 +116,212 @@ status-website:
       href: https://malhabrasil.com
     - title: vctgomes.com
       href: https://vctgomes.com
-  theme: dark
+  # base clara; a paleta branco/azul vem do override em css abaixo
+  theme: light
+
+  # fita de barrinhas por dia, uma por monitor. os dados vem de
+  # daily/uptime.json, gerado pelo workflow Daily uptime CI.
+  css: |
+    /* paleta branco/azul. o tema do Upptime e todo em custom properties
+       (themes/light.css), entao sobrescrever :root repinta a pagina inteira
+       sem precisar mexer em regra nenhuma do template. */
+    :root {
+      --body-background-color: #f4f7fd;
+      --body-text-color: #0f1a2e;
+      --card-background-color: #ffffff;
+      --card-border-color: #dbe4f2;
+      --nav-background-color: #ffffff;
+      --nav-border-bottom-color: #dbe4f2;
+      --nav-current-border-bottom-color: #2563eb;
+      /* estados: ajustados para contraste sobre card branco. os valores do
+         tema original foram calibrados para fundo escuro e ficam claros aqui. */
+      --up-border-left-color: #16a34a;
+      --degraded-border-left-color: #d97706;
+      --down-border-left-color: #dc2626;
+      --down-background-color: #fee2e2;
+      --change-background-color: #fde68a;
+      --tag-color: #ffffff;
+      --tag-up-background-color: #16a34a;
+      --tag-degraded-background-color: #d97706;
+      --tag-down-background-color: #dc2626;
+      --error-button-border-color: #1d4ed8;
+      --error-button-background-color: #2563eb;
+      --error-button-color: #ffffff;
+      --submit-button-border-color: #1d4ed8;
+      --submit-button-background-color: #2563eb;
+      --submit-button-color: #ffffff;
+      /* dia sem medicao na fita: precisa aparecer sobre card branco, entao nao
+         reaproveita o --card-border-color, que e quase invisivel aqui */
+      --upt-nodata-color: #cfd8e6;
+    }
+
+    /* azul nos titulos e no nome de cada servico */
+    h1,
+    h2,
+    article h4 a {
+      color: #1d4ed8;
+    }
+
+    /* Os icones dos monitores sao artes claras, feitas para fundo escuro: o
+       icon.svg da RMF e uma silhueta branca (o feColorMatrix dele forca RGB
+       para 1 e preserva so o alpha) e o da Malha Brasil tem luminancia media
+       0.90. Sobre card branco os dois praticamente desapareciam.
+       invert() em vez de brightness(0) porque preserva o detalhe interno da
+       arte, em vez de achatar tudo numa silhueta chapada.
+       NAO vale para o logo do navbar (.logo): aquele ja e azul,
+       rgb(58,122,213), e invertido viraria laranja. */
+    article h4 .icon {
+      filter: invert(1);
+    }
+
+    /* remove o tracinho de status a esquerda dos cards. o global.css declara
+       border-left: 0.2rem solid em article.up/.degraded/.down e pinta a cor com
+       !important, mas zerar largura e estilo vence porque sao outras
+       propriedades. */
+    article.up,
+    article.degraded,
+    article.down {
+      border-left-width: 0 !important;
+      border-left-style: none !important;
+    }
+
+    .upt-wrap {
+      margin-top: 0.85rem;
+    }
+    .upt-strip {
+      display: flex;
+      align-items: stretch;
+      gap: 2px;
+      height: 30px;
+    }
+    .upt-bar {
+      flex: 1 1 0;
+      /* 90 barras precisam caber em tela estreita sem estourar o card */
+      min-width: 2px;
+      border-radius: 2px;
+      transition: transform 0.1s;
+    }
+    .upt-bar:hover {
+      transform: scaleY(1.12);
+    }
+    /* as cores vem das custom properties do tema (themes/<theme>.css), entao a
+       fita acompanha o tema e casa com a borda dos cards. os fallbacks valem
+       so se o Upptime renomear as variaveis. */
+    .upt-up {
+      background: var(--up-border-left-color, #20bf6b);
+    }
+    .upt-degraded {
+      background: var(--degraded-border-left-color, #f7b731);
+    }
+    .upt-down {
+      background: var(--down-border-left-color, #eb3b5a);
+    }
+    /* dia sem medicao: neutro, nunca verde. nao afirmamos disponibilidade que
+       ninguem mediu. */
+    .upt-nodata {
+      background: var(--upt-nodata-color, #cfd8e6);
+    }
+    .upt-legend {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.3rem;
+      font-size: 0.72rem;
+      opacity: 0.6;
+    }
+    @media (max-width: 640px) {
+      .upt-strip {
+        height: 22px;
+        gap: 1px;
+      }
+    }
+
+  # o template do Upptime renderiza os cards no cliente, entao esperamos o
+  # section.live-status aparecer. os seletores usados aqui (section.live-status,
+  # article, o href /history/<slug>) sao estaveis; as classes svelte-xxxxx nao
+  # sao, porque o hash muda a cada build do template.
+  js: |
+    (function () {
+      var SRC =
+        "https://raw.githubusercontent.com/VCTGomes/vct-status/master/daily/uptime.json";
+      var data = null;
+
+      function bar(day) {
+        var el = document.createElement("span");
+        el.className = "upt-bar upt-" + day.status;
+        var label = day.date;
+        if (day.status === "nodata") {
+          label += " — sem dado";
+        } else {
+          label += " — " + day.uptime.toFixed(2) + "%";
+          if (day.minutes.down) label += " · " + day.minutes.down + " min fora do ar";
+          if (day.minutes.degraded)
+            label += " · " + day.minutes.degraded + " min degradado";
+        }
+        el.title = label;
+        return el;
+      }
+
+      function render() {
+        if (!data) return;
+        var articles = document.querySelectorAll("section.live-status article");
+        for (var i = 0; i < articles.length; i++) {
+          var art = articles[i];
+          if (art.getAttribute("data-upt") === "1") continue;
+          var link = art.querySelector("h4 a[href*='/history/']");
+          if (!link) continue;
+          var slug = link.getAttribute("href").split("/history/").pop();
+          var mon = null;
+          for (var j = 0; j < data.monitors.length; j++) {
+            if (data.monitors[j].slug === slug) mon = data.monitors[j];
+          }
+          if (!mon) continue;
+          // marca antes de inserir, senao o MutationObserver reentra
+          art.setAttribute("data-upt", "1");
+
+          var strip = document.createElement("div");
+          strip.className = "upt-strip";
+          for (var k = 0; k < mon.days.length; k++) {
+            strip.appendChild(bar(mon.days[k]));
+          }
+          var legend = document.createElement("div");
+          legend.className = "upt-legend";
+          var from = document.createElement("span");
+          from.textContent = mon.days.length + " dias";
+          var to = document.createElement("span");
+          to.textContent = "hoje";
+          legend.appendChild(from);
+          legend.appendChild(to);
+
+          var wrap = document.createElement("div");
+          wrap.className = "upt-wrap";
+          wrap.appendChild(strip);
+          wrap.appendChild(legend);
+          art.appendChild(wrap);
+        }
+      }
+
+      function load() {
+        fetch(SRC, { cache: "no-cache" })
+          .then(function (r) {
+            return r.json();
+          })
+          .then(function (d) {
+            data = d;
+            render();
+          })
+          .catch(function () {});
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", load);
+      } else {
+        load();
+      }
+      new MutationObserver(render).observe(document.documentElement, {
+        childList: true,
+        subtree: true
+      });
+    })();
 
 i18n:
   activeIncidents: Incidentes ativos
