@@ -1,7 +1,7 @@
 url: https://cdn.redesmoveisfixas.com/health
-status: degraded
+status: up
 code: 200
-responseTime: 255
-lastUpdated: 2026-08-17T23:14:42.019Z
+responseTime: 197
+lastUpdated: 2026-08-18T00:01:31.512Z
 startTime: 2026-07-24T21:45:56.138Z
 generator: Upptime <https://github.com/upptime/upptime>
