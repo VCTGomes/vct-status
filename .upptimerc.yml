@@ -324,6 +324,7 @@ status-website:
     })();
 
 i18n:
+  locale: pt-BR
   activeIncidents: Incidentes ativos
   allSystemsOperational: Todos os serviços operacionais
   incidentReport: "Relatório #$NUMBER:"
